@@ -83,12 +83,25 @@ alert("Recording started");
 async function stopRecording(){
 
 
-recorder.stop();
-
-
-
 recorder.onstop =
 async()=>{
+
+const audio =
+new Blob(
+chunks,
+{
+type:"audio/webm"
+}
+);
+
+...
+
+
+};
+
+
+recorder.stop();
+
 
 
 const audio =
