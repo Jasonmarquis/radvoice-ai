@@ -18,8 +18,10 @@ const upload = multer({
 
 
 const client = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
+    apiKey: process.env.OPENAI_API_KEY,
+    timeout: 60000
 });
+
 
 
 
@@ -45,16 +47,18 @@ try{
 const result =
 await client.audio.transcriptions.create({
 
-model:"whisper-1",
+model: "whisper-1",
 
-file:
-fs.createReadStream(
+file: fs.createReadStream(
 req.file.path
 ),
 
-language:"en"
+response_format: "text",
+
+language: "en"
 
 });
+
 
 
 
