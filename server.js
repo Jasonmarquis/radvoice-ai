@@ -80,7 +80,10 @@ result.text
 
 catch(error){
 
-console.log(error);
+console.log(
+"WHISPER ERROR:",
+error
+);
 
 res.status(500).json({
 
@@ -90,6 +93,7 @@ error.message
 });
 
 }
+
 
 
 });
