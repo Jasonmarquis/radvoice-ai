@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>
+RadVoice AI
+</title>
+
+</head>
+
+
+<body>
+
+<h1>🩻 RadVoice AI Whisper Test</h1>
+
+
+<button onclick="startRecording()">
+🎤 Start
+</button>
+
+
+<button onclick="stopRecording()">
+⏹ Stop
+</button>
+
+
+<h3>Result</h3>
+
+
+<textarea id="result"
+rows="10"
+cols="80">
+</textarea>
+
+
+
+<script>
+
+
+let recorder;
+let chunks=[];
+
+
+
+async function startRecording(){
+
+
+const stream =
+await navigator.mediaDevices.getUserMedia(
+{
+audio:true
+}
+);
+
+
+recorder =
+new MediaRecorder(stream);
+
+
+chunks=[];
+
+
+recorder.ondataavailable =
+event=>{
+
+chunks.push(event.data);
+
+};
+
+
+
+recorder.start();
+
+
+alert("Recording started");
+
+
+}
+
+
+
+async function stopRecording(){
+
+
+recorder.stop();
+
+
+
+recorder.onstop =
+async()=>{
+
+
+const audio =
+new Blob(
+chunks,
+{
+type:"audio/webm"
+}
+);
+
+
+
+const form =
+new FormData();
+
+
+form.append(
+"audio",
+audio,
+"voice.webm"
+);
+
+
+
+const response =
+await fetch(
+"/transcribe",
+{
+method:"POST",
+body:form
+}
+);
+
+
+
+const data =
+await response.json();
+
+
+
+document.getElementById(
+"result"
+).value =
+data.text;
+
+
+};
+
+
+}
+
+
+
+</script>
+
+
+</body>
+
+</html>
