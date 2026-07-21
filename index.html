@@ -2,56 +2,58 @@
 <html>
 
 <head>
-
-<title>
-RadVoice AI
-</title>
-
+<title>RadVoice AI</title>
 </head>
-
 
 <body>
 
-<h1>🩻 RadVoice AI Whisper Test</h1>
+<h1>RadVoice AI Whisper Test</h1>
 
-
-<button onclick="startRecording()">
+<button id="start">
 🎤 Start
 </button>
 
-
-<button onclick="stopRecording()">
+<button id="stop">
 ⏹ Stop
 </button>
 
-
-<h3>Result</h3>
-
+<p id="status">
+Ready
+</p>
 
 <textarea id="result"
 rows="10"
-cols="80">
-</textarea>
-
+cols="80"></textarea>
 
 
 <script>
-
 
 let recorder;
 let chunks=[];
 
 
+const startButton =
+document.getElementById("start");
 
-async function startRecording(){
+const stopButton =
+document.getElementById("stop");
+
+const status =
+document.getElementById("status");
+
+
+
+startButton.onclick = async function(){
+
+
+console.log("start clicked");
 
 
 const stream =
 await navigator.mediaDevices.getUserMedia(
 {
 audio:true
-}
-);
+});
 
 
 recorder =
@@ -62,28 +64,46 @@ chunks=[];
 
 
 recorder.ondataavailable =
-event=>{
+function(e){
 
-chunks.push(event.data);
+chunks.push(e.data);
 
 };
-
 
 
 recorder.start();
 
 
-alert("Recording started");
+status.innerText =
+"Recording...";
 
+
+};
+
+
+
+stopButton.onclick = function(){
+
+
+console.log("stop clicked");
+
+
+if(!recorder){
+
+alert("Recorder not started");
+
+return;
 
 }
 
 
 
-async function stopRecording(){
+recorder.onstop =
+async function(){
 
 
-recorder.onstop = async()=>{
+status.innerText =
+"Uploading...";
 
 
 const audio =
@@ -130,6 +150,10 @@ document.getElementById(
 data.text || data.error;
 
 
+status.innerText =
+"Done";
+
+
 };
 
 
@@ -137,79 +161,10 @@ data.text || data.error;
 recorder.stop();
 
 
-}
-
-const audio =
-new Blob(
-chunks,
-{
-type:"audio/webm"
-}
-);
-
-...
-
-
 };
-
-
-recorder.stop();
-
-
-
-const audio =
-new Blob(
-chunks,
-{
-type:"audio/webm"
-}
-);
-
-
-
-const form =
-new FormData();
-
-
-form.append(
-"audio",
-audio,
-"voice.webm"
-);
-
-
-
-const response =
-await fetch(
-"/transcribe",
-{
-method:"POST",
-body:form
-}
-);
-
-
-
-const data =
-await response.json();
-
-
-
-document.getElementById(
-"result"
-).value =
-data.text;
-
-
-};
-
-
-}
-
 
 
 </script>
-
 
 </body>
 
