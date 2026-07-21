@@ -53,7 +53,15 @@ file: fs.createReadStream(
 req.file.path
 ),
 
-response_format: "text",
+const result = await client.audio.transcriptions.create({
+    file: fs.createReadStream(req.file.path),
+    model: "whisper-1",
+    language: "en"
+});
+
+res.json({
+    text: result.text
+});
 
 language: "en"
 
