@@ -83,8 +83,61 @@ alert("Recording started");
 async function stopRecording(){
 
 
-recorder.onstop =
-async()=>{
+recorder.onstop = async()=>{
+
+
+const audio =
+new Blob(
+chunks,
+{
+type:"audio/webm"
+}
+);
+
+
+
+const form =
+new FormData();
+
+
+form.append(
+"audio",
+audio,
+"voice.webm"
+);
+
+
+
+const response =
+await fetch(
+"/transcribe",
+{
+method:"POST",
+body:form
+}
+);
+
+
+
+const data =
+await response.json();
+
+
+
+document.getElementById(
+"result"
+).value =
+data.text || data.error;
+
+
+};
+
+
+
+recorder.stop();
+
+
+}
 
 const audio =
 new Blob(
