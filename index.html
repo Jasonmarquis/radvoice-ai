@@ -17,9 +17,7 @@
 ⏹ Stop
 </button>
 
-<p id="status">
-Ready
-</p>
+<p id="status">Ready</p>
 
 <textarea id="result"
 rows="10"
@@ -29,31 +27,23 @@ cols="80"></textarea>
 <script>
 
 let recorder;
-let chunks=[];
+let chunks = [];
 
 
-const startButton =
-document.getElementById("start");
-
-const stopButton =
-document.getElementById("stop");
-
-const status =
-document.getElementById("status");
+document
+.getElementById("start")
+.onclick = async function(){
 
 
-
-startButton.onclick = async function(){
-
-
-console.log("start clicked");
+console.log("START");
 
 
-const stream =
+let stream =
 await navigator.mediaDevices.getUserMedia(
 {
 audio:true
-});
+}
+);
 
 
 recorder =
@@ -74,7 +64,9 @@ chunks.push(e.data);
 recorder.start();
 
 
-status.innerText =
+document
+.getElementById("status")
+.innerText =
 "Recording...";
 
 
@@ -82,31 +74,19 @@ status.innerText =
 
 
 
-stopButton.onclick = function(){
+document
+.getElementById("stop")
+.onclick = function(){
 
 
-console.log("stop clicked");
-
-
-if(!recorder){
-
-alert("Recorder not started");
-
-return;
-
-}
-
+console.log("STOP");
 
 
 recorder.onstop =
 async function(){
 
 
-status.innerText =
-"Uploading...";
-
-
-const audio =
+let audio =
 new Blob(
 chunks,
 {
@@ -115,8 +95,7 @@ type:"audio/webm"
 );
 
 
-
-const form =
+let form =
 new FormData();
 
 
@@ -128,7 +107,7 @@ audio,
 
 
 
-const response =
+let response =
 await fetch(
 "/transcribe",
 {
@@ -139,23 +118,17 @@ body:form
 
 
 
-const data =
+let data =
 await response.json();
 
 
-
-document.getElementById(
-"result"
-).value =
+document
+.getElementById("result")
+.value =
 data.text || data.error;
 
 
-status.innerText =
-"Done";
-
-
 };
-
 
 
 recorder.stop();
@@ -165,6 +138,7 @@ recorder.stop();
 
 
 </script>
+
 
 </body>
 
